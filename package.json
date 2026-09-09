@@ -1,0 +1,23 @@
+{
+  "name": "job-tracker",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev:client": "npm run dev -w client",
+    "dev:server": "npm run dev -w server",
+    "build:client": "npm run build -w client",
+    "build:server": "npm run build -w server",
+    "lint": "npm run lint -w client && npm run lint -w server",
+    "prisma:generate": "npm run prisma:generate -w server",
+    "prisma:migrate": "npm run prisma:migrate -w server",
+    "prisma:studio": "npm run prisma:studio -w server"
+  },
+  "overrides": {
+    "qs": "^6.16.0",
+    "deepmerge-ts": "^8.0.0"
+  }
+}

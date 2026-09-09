@@ -1,0 +1,46 @@
+# Job Tracker
+
+A small full-stack app for tracking job applications — company, role, status, notes — built to demonstrate a React/TypeScript/Node stack end to end.
+
+## Architecture
+
+Monorepo with two npm workspaces:
+
+- **`client/`** — React 19 + TypeScript + Vite, Tailwind CSS, TanStack Query, React Router
+- **`server/`** — Node + Express + TypeScript, Prisma ORM, PostgreSQL, JWT auth
+
+REST API, stateless auth via JWT, Postgres as the source of truth. No framework magic beyond what's needed — chosen to be legible in a code review, not to look clever.
+
+## Local development
+
+Requires Node 20+ and Docker (for local Postgres).
+
+```bash
+# 1. install everything
+npm install
+
+# 2. start local Postgres
+docker compose up -d
+
+# 3. configure the server
+cp server/.env.example server/.env
+# edit server/.env if needed
+
+# 4. run migrations
+npm run prisma:migrate -w server
+
+# 5. run both apps (in separate terminals)
+npm run dev:server
+npm run dev:client
+```
+
+Client runs at http://localhost:5173, API at http://localhost:4000.
+
+## Deployment
+
+- **Client** → Vercel (static build of `client/`)
+- **Server + DB** → Railway (Express service + managed Postgres)
+
+## Status
+
+Work in progress — see commit history for what's built so far.
