@@ -3,11 +3,16 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { STATUSES, STATUS_LABELS, type Application } from '../types';
 
+const httpUrl = z
+  .string()
+  .url('Enter a valid URL')
+  .refine((val) => /^https?:\/\//i.test(val), 'URL must start with http:// or https://');
+
 const schema = z.object({
   company: z.string().min(1, 'Required'),
   role: z.string().min(1, 'Required'),
   status: z.enum(STATUSES),
-  url: z.string().url('Enter a valid URL').optional().or(z.literal('')),
+  url: httpUrl.optional().or(z.literal('')),
   location: z.string().optional(),
   salary: z.string().optional(),
   notes: z.string().optional(),

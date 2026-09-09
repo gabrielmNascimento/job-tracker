@@ -9,11 +9,16 @@ applicationsRouter.use(requireAuth);
 
 const statusValues = ['WISHLIST', 'APPLIED', 'SCREENING', 'INTERVIEW', 'OFFER', 'REJECTED'] as const;
 
+const httpUrl = z
+  .string()
+  .url()
+  .refine((val) => /^https?:\/\//i.test(val), 'URL must start with http:// or https://');
+
 const applicationSchema = z.object({
   company: z.string().min(1),
   role: z.string().min(1),
   status: z.enum(statusValues).default('APPLIED'),
-  url: z.string().url().optional().or(z.literal('')),
+  url: httpUrl.optional().or(z.literal('')),
   location: z.string().optional(),
   salary: z.string().optional(),
   notes: z.string().optional(),
