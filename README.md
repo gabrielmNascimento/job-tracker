@@ -2,6 +2,8 @@
 
 A small full-stack app for tracking job applications — company, role, status, notes — built to demonstrate a React/TypeScript/Node stack end to end.
 
+**Live:** https://job-tracker-gabriel.vercel.app · API: https://server-production-8388.up.railway.app
+
 ## Architecture
 
 Monorepo with two npm workspaces:
@@ -38,8 +40,8 @@ Client runs at http://localhost:5173, API at http://localhost:4000.
 
 ## Deployment
 
-- **Client** → Vercel (static build of `client/`)
-- **Server + DB** → Railway (Express service + managed Postgres)
+- **Client** → Vercel (static build of `client/`), auto-deploys on push to `main`
+- **Server + DB** → Railway (Express service + managed Postgres), auto-deploys on push to `main`
 
 ## Status
 
