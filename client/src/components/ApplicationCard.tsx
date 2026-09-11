@@ -33,7 +33,7 @@ export function ApplicationCard({ application, onEdit, onDelete }: Props) {
       </div>
 
       {(application.location || application.salary) && (
-        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
+        <p className="mt-2 break-words text-xs text-slate-500 dark:text-slate-400">
           {[application.location, application.salary].filter(Boolean).join(' · ')}
         </p>
       )}
