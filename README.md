@@ -13,6 +13,8 @@ Monorepo with two npm workspaces:
 
 REST API, stateless auth via JWT, Postgres as the source of truth. No framework magic beyond what's needed — chosen to be legible in a code review, not to look clever.
 
+Field limits (enforced client- and server-side): company/role/location max 120 chars, notes max 1000, salary numbers only up to 6 digits, job URL auto-prefixed with `https://` if you type a bare domain.
+
 ## Local development
 
 Requires Node 20+ and Docker (for local Postgres).
