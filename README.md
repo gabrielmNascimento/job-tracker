@@ -1,6 +1,6 @@
 # Job Tracker
 
-A small full-stack app for tracking job applications — company, role, status, notes — built to demonstrate a React/TypeScript/Node stack end to end.
+A small full-stack app for tracking job applications — company, role, status, notes, and an attached resume — built to demonstrate a React/TypeScript/Node stack end to end.
 
 **Live:** https://job-tracker-gabriel.vercel.app · API: https://server-production-8388.up.railway.app
 
@@ -14,6 +14,8 @@ Monorepo with two npm workspaces:
 REST API, stateless auth via JWT, Postgres as the source of truth. No framework magic beyond what's needed — chosen to be legible in a code review, not to look clever.
 
 Field limits (enforced client- and server-side): company/role/location max 120 chars, notes max 1000, salary numbers only up to 6 digits, job URL auto-prefixed with `https://` if you type a bare domain.
+
+Resumes are uploaded as PDF/Word files (5 MB max, 10 per user), stored as bytes in Postgres, and can be attached to any application. Every resume route is scoped to its owner — no cross-user access by guessing an ID.
 
 ## Local development
 
