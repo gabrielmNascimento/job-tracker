@@ -40,7 +40,13 @@ resumesRouter.get('/', async (req: AuthedRequest, res) => {
   res.json(resumes);
 });
 
-resumesRouter.post('/', (req: AuthedRequest, res) => {
+resumesRouter.post('/', async (req: AuthedRequest, res) => {
+  const count = await prisma.resume.count({ where: { userId: req.userId } });
+  if (count >= MAX_RESUMES_PER_USER) {
+    res.status(400).json({ error: `You can only keep up to ${MAX_RESUMES_PER_USER} resumes` });
+    return;
+  }
+
   upload.single('file')(req, res, async (err) => {
     if (err) {
       res.status(400).json({ error: err instanceof Error ? err.message : 'Upload failed' });
@@ -48,12 +54,6 @@ resumesRouter.post('/', (req: AuthedRequest, res) => {
     }
     if (!req.file) {
       res.status(400).json({ error: 'No file provided' });
-      return;
-    }
-
-    const count = await prisma.resume.count({ where: { userId: req.userId } });
-    if (count >= MAX_RESUMES_PER_USER) {
-      res.status(400).json({ error: `You can only keep up to ${MAX_RESUMES_PER_USER} resumes` });
       return;
     }
 
