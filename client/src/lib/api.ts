@@ -1,4 +1,4 @@
-import type { Application, AuthResponse, Status } from '../types';
+import type { Application, AuthResponse, Resume, Status } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL ?? '/api';
 
@@ -52,6 +52,39 @@ export const api = {
     request<Application>(`/applications/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
 
   deleteApplication: (id: string) => request<void>(`/applications/${id}`, { method: 'DELETE' }),
+
+  listResumes: () => request<Resume[]>('/resumes'),
+
+  uploadResume: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch(`${API_URL}/resumes`, {
+      method: 'POST',
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
+      body: formData,
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new ApiError(body.error?.formErrors?.[0] ?? body.error ?? res.statusText, res.status);
+    }
+    return res.json() as Promise<Resume>;
+  },
+
+  deleteResume: (id: string) => request<void>(`/resumes/${id}`, { method: 'DELETE' }),
+
+  downloadResume: async (id: string, filename: string) => {
+    const res = await fetch(`${API_URL}/resumes/${id}/download`, {
+      headers: authToken ? { Authorization: `Bearer ${authToken}` } : {},
+    });
+    if (!res.ok) throw new ApiError('Download failed', res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  },
 };
 
 export type { Status };

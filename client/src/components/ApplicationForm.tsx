@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useResumes } from '../lib/useResumes';
 import { STATUSES, STATUS_LABELS, type Application } from '../types';
 
 function normalizeUrl(val: string): string {
@@ -21,6 +22,7 @@ const schema = z.object({
     .optional()
     .or(z.literal('')),
   notes: z.string().max(1000, 'Too long').optional(),
+  resumeId: z.string().optional().or(z.literal('')),
 });
 
 export type ApplicationFormValues = z.infer<typeof schema>;
@@ -32,6 +34,7 @@ interface Props {
 }
 
 export function ApplicationForm({ initial, onSubmit, onCancel }: Props) {
+  const { data: resumes = [] } = useResumes();
   const {
     register,
     handleSubmit,
@@ -49,6 +52,7 @@ export function ApplicationForm({ initial, onSubmit, onCancel }: Props) {
           location: initial.location ?? '',
           salary: initial.salary ?? '',
           notes: initial.notes ?? '',
+          resumeId: initial.resumeId ?? '',
         }
       : { status: 'APPLIED' },
   });
@@ -125,6 +129,18 @@ export function ApplicationForm({ initial, onSubmit, onCancel }: Props) {
         <label className={labelClass}>Notes</label>
         <textarea {...register('notes')} rows={3} className={inputClass} maxLength={1000} />
         {errors.notes && <p className="mt-1 text-xs text-red-600">{errors.notes.message}</p>}
+      </div>
+
+      <div>
+        <label className={labelClass}>Resume</label>
+        <select {...register('resumeId')} className={inputClass}>
+          <option value="">None</option>
+          {resumes.map((resume) => (
+            <option key={resume.id} value={resume.id}>
+              {resume.filename}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="mt-2 flex justify-end gap-2">

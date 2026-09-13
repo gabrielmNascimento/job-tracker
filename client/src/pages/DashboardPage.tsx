@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { ApplicationForm, type ApplicationFormValues } from '../components/ApplicationForm';
 import { Board } from '../components/Board';
 import { Modal } from '../components/Modal';
+import { ResumesModal } from '../components/ResumesModal';
 import { StatsBar } from '../components/StatsBar';
 import { useAuth } from '../context/AuthContext';
 import { useApplications, useCreateApplication, useDeleteApplication, useUpdateApplication } from '../lib/useApplications';
@@ -16,6 +17,7 @@ export function DashboardPage() {
 
   const [search, setSearch] = useState('');
   const [formOpen, setFormOpen] = useState(false);
+  const [resumesOpen, setResumesOpen] = useState(false);
   const [editing, setEditing] = useState<Application | undefined>(undefined);
 
   const filtered = useMemo(() => {
@@ -60,6 +62,12 @@ export function DashboardPage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Job Tracker</h1>
           <div className="flex items-center gap-4">
+            <button
+              onClick={() => setResumesOpen(true)}
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+            >
+              Resumes
+            </button>
             <span className="text-sm text-slate-500 dark:text-slate-400">{user?.email}</span>
             <button
               onClick={logout}
@@ -114,6 +122,8 @@ export function DashboardPage() {
           <ApplicationForm initial={editing} onSubmit={handleSubmit} onCancel={() => setFormOpen(false)} />
         </Modal>
       )}
+
+      {resumesOpen && <ResumesModal onClose={() => setResumesOpen(false)} />}
     </div>
   );
 }

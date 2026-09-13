@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { env } from './lib/env.js';
 import { applicationsRouter } from './routes/applications.js';
 import { authRouter } from './routes/auth.js';
+import { resumesRouter } from './routes/resumes.js';
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.get('/', (_req, res) => res.json({ name: 'job-tracker-api', health: '/health
 app.get('/health', (_req, res) => res.json({ ok: true }));
 app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/applications', applicationsRouter);
+app.use('/api/resumes', resumesRouter);
 
 app.listen(env.port, () => {
   console.log(`Server listening on http://localhost:${env.port}`);

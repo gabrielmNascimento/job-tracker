@@ -27,12 +27,23 @@ const applicationSchema = z.object({
     .or(z.literal('')),
   notes: z.string().max(1000).optional(),
   appliedAt: z.string().datetime().optional(),
+  resumeId: z.string().cuid().optional().or(z.literal('')),
 });
+
+async function resolveResumeId(userId: string, resumeId: string | undefined) {
+  if (resumeId === undefined) return undefined;
+  if (resumeId === '') return null;
+  const resume = await prisma.resume.findFirst({ where: { id: resumeId, userId }, select: { id: true } });
+  return resume ? resume.id : 'invalid';
+}
+
+const resumeInclude = { resume: { select: { id: true, filename: true } } } as const;
 
 applicationsRouter.get('/', async (req: AuthedRequest, res) => {
   const applications = await prisma.application.findMany({
     where: { userId: req.userId },
     orderBy: { updatedAt: 'desc' },
+    include: resumeInclude,
   });
   res.json(applications);
 });
@@ -43,14 +54,22 @@ applicationsRouter.post('/', async (req: AuthedRequest, res) => {
     res.status(400).json({ error: parsed.error.flatten() });
     return;
   }
-  const { url, appliedAt, ...rest } = parsed.data;
+  const { url, appliedAt, resumeId, ...rest } = parsed.data;
+  const resolvedResumeId = await resolveResumeId(req.userId!, resumeId);
+  if (resolvedResumeId === 'invalid') {
+    res.status(400).json({ error: 'Resume not found' });
+    return;
+  }
+
   const application = await prisma.application.create({
     data: {
       ...rest,
       url: url || undefined,
       appliedAt: appliedAt ? new Date(appliedAt) : undefined,
+      resumeId: resolvedResumeId,
       userId: req.userId!,
     },
+    include: resumeInclude,
   });
   res.status(201).json(application);
 });
@@ -70,14 +89,22 @@ applicationsRouter.patch('/:id', async (req: AuthedRequest, res) => {
     return;
   }
 
-  const { url, appliedAt, ...rest } = parsed.data;
+  const { url, appliedAt, resumeId, ...rest } = parsed.data;
+  const resolvedResumeId = await resolveResumeId(req.userId!, resumeId);
+  if (resolvedResumeId === 'invalid') {
+    res.status(400).json({ error: 'Resume not found' });
+    return;
+  }
+
   const application = await prisma.application.update({
     where: { id: existing.id },
     data: {
       ...rest,
       url: url || undefined,
       appliedAt: appliedAt ? new Date(appliedAt) : undefined,
+      resumeId: resolvedResumeId,
     },
+    include: resumeInclude,
   });
   res.json(application);
 });

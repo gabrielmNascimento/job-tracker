@@ -1,3 +1,4 @@
+import { api } from '../lib/api';
 import type { Application } from '../types';
 
 interface Props {
@@ -42,16 +43,26 @@ export function ApplicationCard({ application, onEdit, onDelete }: Props) {
         Applied {new Date(application.appliedAt).toLocaleDateString()}
       </p>
 
-      {application.url && (
-        <a
-          href={application.url}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-2 inline-block text-xs text-indigo-600 hover:underline dark:text-indigo-400"
-        >
-          View posting ↗
-        </a>
-      )}
+      <div className="mt-2 flex items-center gap-3">
+        {application.url && (
+          <a
+            href={application.url}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+          >
+            View posting ↗
+          </a>
+        )}
+        {application.resume && (
+          <button
+            onClick={() => api.downloadResume(application.resume!.id, application.resume!.filename)}
+            className="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+          >
+            Resume ⬇
+          </button>
+        )}
+      </div>
     </div>
   );
 }

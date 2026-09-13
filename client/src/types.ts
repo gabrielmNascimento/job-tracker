@@ -24,6 +24,16 @@ export interface Application {
   createdAt: string;
   updatedAt: string;
   userId: string;
+  resumeId?: string | null;
+  resume?: { id: string; filename: string } | null;
+}
+
+export interface Resume {
+  id: string;
+  filename: string;
+  mimeType: string;
+  fileSize: number;
+  createdAt: string;
 }
 
 export interface AuthUser {
