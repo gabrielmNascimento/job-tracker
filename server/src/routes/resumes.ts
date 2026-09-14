@@ -28,7 +28,11 @@ const upload = multer({
 });
 
 function sanitizeFilename(name: string): string {
-  return name.replace(/[^\w.\- ]/g, '_').slice(0, 200) || 'resume';
+  // multer/busboy decodes multipart filenames as latin1; browsers send UTF-8, so reverse that first
+  const utf8Name = Buffer.from(name, 'latin1').toString('utf8');
+  // oxlint-disable-next-line no-control-regex -- intentionally stripping control chars
+  const cleaned = utf8Name.replace(/[\x00-\x1f\x7f/\\]/g, '_').trim();
+  return cleaned.slice(0, 200) || 'resume';
 }
 
 resumesRouter.get('/', async (req: AuthedRequest, res) => {

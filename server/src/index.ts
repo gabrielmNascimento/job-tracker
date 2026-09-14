@@ -21,8 +21,16 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 300,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.get('/', (_req, res) => res.json({ name: 'job-tracker-api', health: '/health', api: '/api' }));
 app.get('/health', (_req, res) => res.json({ ok: true }));
+app.use('/api', apiLimiter);
 app.use('/api/auth', authLimiter, authRouter);
 app.use('/api/applications', applicationsRouter);
 app.use('/api/resumes', resumesRouter);
