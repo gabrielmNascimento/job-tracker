@@ -43,13 +43,13 @@ export function ApplicationCard({ application, onEdit, onDelete }: Props) {
         Applied {new Date(application.appliedAt).toLocaleDateString()}
       </p>
 
-      <div className="mt-2 flex items-center gap-3">
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         {application.url && (
           <a
             href={application.url}
             target="_blank"
             rel="noreferrer"
-            className="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+            className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 transition hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:hover:bg-blue-900/70"
           >
             View posting ↗
           </a>
@@ -57,7 +57,7 @@ export function ApplicationCard({ application, onEdit, onDelete }: Props) {
         {application.resume && (
           <button
             onClick={() => api.downloadResume(application.resume!.id, application.resume!.filename)}
-            className="text-xs text-indigo-600 hover:underline dark:text-indigo-400"
+            className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700 transition hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/70"
           >
             Resume ⬇
           </button>

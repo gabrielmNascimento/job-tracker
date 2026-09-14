@@ -64,7 +64,7 @@ export function DashboardPage() {
           <div className="flex items-center gap-4">
             <button
               onClick={() => setResumesOpen(true)}
-              className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
+              className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-700 transition hover:bg-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/70"
             >
               Resumes
             </button>
